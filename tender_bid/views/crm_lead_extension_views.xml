@@ -47,29 +47,58 @@
     </record>
 
 
-    <odoo>
-        <record id="crm_lead_form_view_boq_inherit" model="ir.ui.view">
-            <field name="name">crm.lead.form.boq.notebook.inherit</field>
-            <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
-            <field name="arch" type="xml">
-                <!-- Add your BOQ page just before the Internal Notes tab -->
-                <xpath expr="//page[@name='internal_notes']" position="before">
-                    <page string="BOQ" name="boq">
-                        <field name="boq_line_ids">
-                            <list editable="bottom">
-                                <field name="item_code"/>
-                                <field name="description"/>
-                                <field name="quantity"/>
-                                <field name="unit"/>
-                                <field name="rate"/>
-                                <field name="amount"/>
-                            </list>
-                        </field>
-                    </page>
-                </xpath>
-            </field>
-        </record>
-    </odoo>
+    <record id="crm_lead_form_view_boq_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.boq.notebook.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add your BOQ page just before the Internal Notes tab -->
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="BOQ" name="boq">
+                    <field name="boq_line_ids">
+                        <list editable="bottom">
+                            <field name="item_code"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit"/>
+                            <field name="rate"/>
+                            <field name="amount"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_inherit_tender_documents" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.tender.documents</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Tender Documents" name="tender_documents">
+                    <field name="tender_document_ids"
+                           context="{'default_lead_id': id, 'default_partner_id': partner_id}">
+                        <list editable="bottom" create="true" delete="true">
+                            <field name="name"/>
+                            <field name="document_type"/>
+                            <field name="upload_date"/>
+                        </list>
+                        <form string="Tender Document">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="document_type"/>
+                                    <field name="attachment" filename="attachment_filename"/>
+                                    <field name="attachment_filename"/>
+                                    <field name="upload_date" readonly="1"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

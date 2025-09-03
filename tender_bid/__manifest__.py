@@ -11,6 +11,7 @@
         'views/tender_bid_views.xml',
         'views/crm_lead_extension_views.xml',
         'views/crm_lead_boq_views.xml',
+        'views/tender_document_views.xml',
         'data/automations.xml',
         'data/sequence_data.xml',
         'data/cron_data.xml'

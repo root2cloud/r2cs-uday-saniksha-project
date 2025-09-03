@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tender_bid_user,tender.bid user,model_tender_bid,,1,1,1,1
 access_tender_bid_boq_line,tender.bid.boq.line,model_tender_boq_line,,1,1,1,1
 access_tender_stage,tender.stage,model_tender_stage,,1,1,1,1
+access_tender_document,tender.document,model_tender_document,,1,1,1,1

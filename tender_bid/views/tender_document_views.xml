@@ -1,0 +1,51 @@
+<odoo>
+    <record id="view_tender_document_form" model="ir.ui.view">
+        <field name="name">tender.document.form</field>
+        <field name="model">tender.document</field>
+        <field name="arch" type="xml">
+            <form string="Tender Document">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="lead_id" options="{'no_create': True}"/>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="document_type"/>
+                        <field name="attachment" filename="attachment_filename"/>
+                        <field name="attachment_filename"/>
+                        <field name="upload_date" readonly="1"/>
+<!--                        <field name="document_folder_path" readonly="1"/>-->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tender_document_tree" model="ir.ui.view">
+        <field name="name">tender.document.tree</field>
+        <field name="model">tender.document</field>
+        <field name="arch" type="xml">
+            <list string="Tender Documents" create="true" edit="true" delete="true">
+                <field name="name"/>
+                <field name="lead_id"/>
+                <field name="partner_id"/>
+                <field name="document_type"/>
+                <field name="upload_date"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="action_tender_documents" model="ir.actions.act_window">
+        <field name="name">Tender Documents</field>
+        <field name="res_model">tender.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Manage Tender Documents linked to Leads and Partners
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_tender_documents" name="Tender Documents" parent="crm.crm_menu_root"
+              action="action_tender_documents" sequence="15"/>
+</odoo>
