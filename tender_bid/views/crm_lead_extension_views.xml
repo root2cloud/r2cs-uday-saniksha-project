@@ -84,6 +84,11 @@
                             <field name="utilities_remarks"/>
                             <field name="topographical_details"/>
                             <field name="soil_details"/>
+
+
+
+
+
                             <field name="soil_contaminated"/>
                             <field name="weather_notes"/>
                             <field name="weather_risk"/>
