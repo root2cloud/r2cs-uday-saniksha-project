@@ -1,4 +1,6 @@
 from odoo import models, fields, api, _
+from datetime import date
+from odoo.exceptions import ValidationError
 
 
 class CrmLead(models.Model):
@@ -19,6 +21,81 @@ class CrmLead(models.Model):
 
     tender_bid_count = fields.Integer(string='Tender Bids', compute='_compute_tender_bid_count')
     boq_line_count = fields.Integer(string='BOQ Lines', compute='_compute_boq_line_count')
+
+    # Survey General Info
+    survey_date = fields.Date(string="Survey Date")
+    survey_team_ids = fields.Many2many('res.users', string="Survey Team")
+    survey_location = fields.Char(string="Survey Location")
+
+    # Site & Technical Observations
+    site_accessibility = fields.Selection([
+        ('good', 'Good'),
+        ('fair', 'Fair'),
+        ('poor', 'Poor'),
+    ], string="Site Accessibility")
+    existing_infrastructure = fields.Text(string="Existing Infrastructure")
+    utilities_availability = fields.Selection([
+        ('available', 'Available'),
+        ('limited', 'Limited'),
+        ('not_available', 'Not Available'),
+    ], string="Utilities Availability")
+    utilities_remarks = fields.Char(string="Utilities Details / Remarks")
+    topographical_details = fields.Text(string="Topographical Details")
+    soil_details = fields.Text(string="Soil / Geotechnical / Environmental Notes")
+    weather_notes = fields.Text(string="Weather/Rain/Climate Notes")
+    soil_contaminated = fields.Boolean(string="Soil Contaminated")
+    weather_risk = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], string="Weather Risk")
+
+    # Measurements & Drawings
+    area_sqm = fields.Float(string="Total Surveyed Area (sqm)")
+    reference_drawing_ids = fields.Many2many(
+        'ir.attachment',
+        'crm_lead_survey_attachment_rel',
+        'lead_id',
+        'attachment_id',
+        string="Reference Drawings/Plans"
+    )
+
+    # Risks & Recommendations
+    access_constraints = fields.Text(string="Access Constraints")
+    key_observations = fields.Text(string="Key Observations")
+    safety_concerns = fields.Text(string="Safety Concerns")
+    risk_assessment = fields.Text(string="Preliminary Risk Assessment")
+    risk_score = fields.Float(string="Risk Score", compute='_compute_risk_score', store=True)
+
+    # Other Info
+    nearby_facilities = fields.Text(string="Nearby Facilities")
+    survey_approval_status = fields.Selection([
+        ('draft', 'Draft'),
+        ('reviewed', 'Reviewed'),
+        ('approved', 'Approved'),
+    ], string="Survey Approval Status", default='draft')
+
+    @api.depends('site_accessibility', 'soil_contaminated', 'weather_risk')
+    def _compute_risk_score(self):
+        for rec in self:
+            score = 0
+            if rec.site_accessibility == 'poor':
+                score += 30
+            if rec.soil_contaminated:
+                score += 40
+            if rec.weather_risk == 'high':
+                score += 20
+            rec.risk_score = min(score, 100)
+
+    @api.constrains('survey_date', 'area_sqm')
+    def _check_survey_fields(self):
+        for rec in self:
+            if rec.area_sqm and rec.area_sqm <= 0:
+                raise ValidationError("Total Surveyed Area must be positive.")
+
+    @api.onchange('utilities_availability')
+    def _onchange_utilities_availability(self):
+        for rec in self:
+            if rec.utilities_availability == 'not_available':
+                rec.utilities_remarks = 'No utilities available on site.'
+            else:
+                rec.utilities_remarks = ''
 
     @api.depends('tender_bid_ids')
     def _compute_tender_bid_count(self):

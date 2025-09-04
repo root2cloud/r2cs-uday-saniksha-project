@@ -66,6 +66,40 @@
                         </list>
                     </field>
                 </page>
+                <page string="Survey Information" name="survey_information">
+                    <group>
+                        <group>
+                            <field name="survey_date"/>
+                            <field name="survey_team_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="survey_location"/>
+                            <field name="area_sqm"/>
+                            <field name="reference_drawing_ids" widget="many2many_binary"/>
+                            <field name="nearby_facilities"/>
+                            <field name="survey_approval_status"/>
+                        </group>
+                        <group>
+                            <field name="site_accessibility"/>
+                            <field name="existing_infrastructure"/>
+                            <field name="utilities_availability"/>
+                            <field name="utilities_remarks"/>
+                            <field name="topographical_details"/>
+                            <field name="soil_details"/>
+                            <field name="soil_contaminated"/>
+                            <field name="weather_notes"/>
+                            <field name="weather_risk"/>
+
+                        </group>
+                        <group>
+                            <field name="risk_score" readonly="1"/>
+
+                            <field name="access_constraints"/>
+                            <field name="key_observations"/>
+                            <field name="safety_concerns"/>
+                            <field name="risk_assessment"/>
+                        </group>
+                    </group>
+                </page>
+
             </xpath>
         </field>
     </record>
